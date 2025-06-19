@@ -52,32 +52,33 @@
                 message.style.display = 'block';
                 return;
             }
-            audio.pause();
-            audio.currentTime = 0;
-            function playAudioSnippet() {
+            isAudioPlaying = true;
+            // Always play exactly 5 seconds from a random position
+            const playSnippet = () => {
                 const duration = audio.duration;
+                let start = 0;
                 if (duration > 5) {
-                    const start = Math.random() * (duration - 5);
-                    audio.currentTime = start;
+                    start = Math.random() * (duration - 5);
                 }
-                isAudioPlaying = true;
+                audio.currentTime = start;
                 audio.play();
+                // Stop after 5 seconds
                 setTimeout(() => {
                     audio.pause();
                     isAudioPlaying = false;
                 }, 5000);
-            }
+            };
             if (audio.readyState >= 1) {
-                playAudioSnippet();
+                playSnippet();
             } else {
-                audio.onloadedmetadata = playAudioSnippet;
+                audio.onloadedmetadata = playSnippet;
             }
         });
 
-        audio.addEventListener('ended', () => {
+        audio.addEventListener('pause', () => {
             isAudioPlaying = false;
         });
-        audio.addEventListener('pause', () => {
+        audio.addEventListener('ended', () => {
             isAudioPlaying = false;
         });
     </script>
