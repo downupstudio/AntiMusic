@@ -42,8 +42,10 @@
         const img = document.getElementById('mainImg');
         const message = document.getElementById('message');
         let clickCount = 0;
+        let isAudioPlaying = false;
 
         img.addEventListener('click', () => {
+            if (isAudioPlaying) return;
             clickCount++;
             if (clickCount >= 5) {
                 img.style.display = 'none';
@@ -52,21 +54,31 @@
             }
             audio.pause();
             audio.currentTime = 0;
-            audio.onloadedmetadata = () => {
+            function playAudioSnippet() {
                 const duration = audio.duration;
                 if (duration > 5) {
                     const start = Math.random() * (duration - 5);
                     audio.currentTime = start;
                 }
+                isAudioPlaying = true;
                 audio.play();
                 setTimeout(() => {
                     audio.pause();
+                    isAudioPlaying = false;
                 }, 5000);
-            };
-            // If metadata is already loaded
-            if (audio.readyState >= 1) {
-                audio.onloadedmetadata();
             }
+            if (audio.readyState >= 1) {
+                playAudioSnippet();
+            } else {
+                audio.onloadedmetadata = playAudioSnippet;
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            isAudioPlaying = false;
+        });
+        audio.addEventListener('pause', () => {
+            isAudioPlaying = false;
         });
     </script>
 </body>
