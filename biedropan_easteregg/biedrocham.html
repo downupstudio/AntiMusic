@@ -25,16 +25,31 @@
             display: block;
             cursor: pointer;
         }
+        #message {
+            color: #fff;
+            font-size: 2rem;
+            display: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <img src="pobrany plik.png" alt="Zdjęcie na środku ekranu" id="mainImg">
+    <div id="message">Po co siedzisz na tej stronie? Lepiej sprawdź całą to pieśń na kanale Miracolous Info!!!</div>
     <audio id="audio" src="Diss Na Hejtera (mp3cut.net).mp3"></audio>
     <script>
         const audio = document.getElementById('audio');
         const img = document.getElementById('mainImg');
+        const message = document.getElementById('message');
+        let clickCount = 0;
 
         img.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount >= 5) {
+                img.style.display = 'none';
+                message.style.display = 'block';
+                return;
+            }
             audio.pause();
             audio.currentTime = 0;
             audio.onloadedmetadata = () => {
