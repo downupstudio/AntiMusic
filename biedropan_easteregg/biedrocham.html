@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zdjęcie na środku ekranu</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img src="pobrany plik.png" alt="Zdjęcie na środku ekranu" id="mainImg">
+    <audio id="audio" src="Diss Na Hejtera (mp3cut.net).mp3"></audio>
+    <script>
+        const audio = document.getElementById('audio');
+        const img = document.getElementById('mainImg');
+
+        img.addEventListener('click', () => {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.onloadedmetadata = () => {
+                const duration = audio.duration;
+                if (duration > 5) {
+                    const start = Math.random() * (duration - 5);
+                    audio.currentTime = start;
+                }
+                audio.play();
+                setTimeout(() => {
+                    audio.pause();
+                }, 5000);
+            };
+            // If metadata is already loaded
+            if (audio.readyState >= 1) {
+                audio.onloadedmetadata();
+            }
+        });
+    </script>
+</body>
+</html>
